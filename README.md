@@ -20,7 +20,13 @@ The application architecture is broken down into completely isolated, dedicated 
 * **NetworkEngine (Network Acceleration):** Performs a clean, native flush of the Windows DNS resolver cache to guarantee seamless network connectivity.
 
 ---
+## 📦 Installation & Download / Letöltés
 
+### 📥 Direct Download
+You can always download the latest compiled, portable version of the application directly from the GitHub Releases page:
+👉 **[Download K-WinMod Latest Release](https://github.com/bszabi05/k-winmod/releases)**
+
+---
 ## 🛠️ Tech Stack
 
 * **Framework:** WinUI 3 (Windows App SDK 1.x)
