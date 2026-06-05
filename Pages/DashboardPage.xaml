@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="MyTool.DashboardPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MyTool"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Spacing="30" Padding="10">
+        <StackPanel Spacing="5">
+            <TextBlock Text="SYSTEM PERFORMANCE" FontSize="24" FontWeight="Bold" Foreground="#F4F4F5" CharacterSpacing="50"/>
+            <TextBlock Text="Real-time hardware resource monitoring." FontSize="13" Foreground="#71717A"/>
+        </StackPanel>
+
+        <GridView Padding="0" 
+          SelectionMode="None" 
+          IsItemClickEnabled="False"
+          HorizontalAlignment="Left">
+
+            <GridView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsWrapGrid Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </GridView.ItemsPanel>
+
+            <GridView.Items>
+
+                <Border Margin="0,0,20,20" Width="220" Height="180" Background="#141419" BorderBrush="#22222C" BorderThickness="1" CornerRadius="12" Padding="20">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
+                        <FontIcon Glyph="&#xE950;" Foreground="#A3E635" FontSize="16" FontFamily="Segoe MDL2 Assets"/>
+                        <TextBlock Text="CPU Usage" Foreground="#A1A1AA" FontSize="14" FontWeight="Medium"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10">
+                        <ProgressRing x:Name="CpuRing" Value="0" Width="70" Height="70" Foreground="#A3E635" Background="#22222C" IsIndeterminate="False"/>
+                        <TextBlock x:Name="CpuText" Text="0%" Foreground="#F4F4F5" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+                <Border Margin="0,0,20,20" Width="220" Height="180" Background="#141419" BorderBrush="#22222C" BorderThickness="1" CornerRadius="12" Padding="20">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
+                        <FontIcon Glyph="&#xE964;" Foreground="#A3E635" FontSize="16" FontFamily="Segoe MDL2 Assets"/>
+                        <TextBlock Text="RAM Usage" Foreground="#A1A1AA" FontSize="14" FontWeight="Medium"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10">
+                        <ProgressRing x:Name="RamRing" Value="0" Width="70" Height="70" Foreground="#A3E635" Background="#22222C" IsIndeterminate="False"/>
+                        <TextBlock x:Name="RamText" Text="0%" Foreground="#F4F4F5" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+                <Border Margin="0,0,20,20" Width="220" Height="180" Background="#141419" BorderBrush="#22222C" BorderThickness="1" CornerRadius="12" Padding="20">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
+                        <FontIcon Glyph="&#xE7F3;" Foreground="#A3E635" FontSize="16" FontFamily="Segoe MDL2 Assets"/>
+                        <TextBlock Text="Disk Active Time" Foreground="#A1A1AA" FontSize="14" FontWeight="Medium"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10">
+                        <ProgressRing x:Name="DiskRing" Value="0" Width="70" Height="70" Foreground="#A3E635" Background="#22222C" IsIndeterminate="False"/>
+                        <TextBlock x:Name="DiskText" Text="0%" Foreground="#F4F4F5" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+                <Border Margin="0,0,20,20" Width="220" Height="180" Background="#141419" BorderBrush="#22222C" BorderThickness="1" CornerRadius="12" Padding="20">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
+                        <FontIcon Glyph="&#xE774;" Foreground="#A3E635" FontSize="16" FontFamily="Segoe MDL2 Assets"/>
+                        <TextBlock Text="Network Download" Foreground="#A1A1AA" FontSize="14" FontWeight="Medium"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10">
+                        <FontIcon Glyph="&#xE896;" Foreground="#A1A1AA" FontSize="28" FontFamily="Segoe MDL2 Assets" Margin="0,0,0,5"/>
+                        <TextBlock x:Name="NetworkText" Text="0 KB/s" Foreground="#F4F4F5" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+                <Border Margin="0,0,20,20" Width="220" Height="180" Background="#141419" BorderBrush="#22222C" BorderThickness="1" CornerRadius="12" Padding="20">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
+                            <FontIcon Glyph="&#xE916;" Foreground="#A3E635" FontSize="16" FontFamily="Segoe MDL2 Assets"/>
+                            <TextBlock Text="System Uptime" Foreground="#A1A1AA" FontSize="14" FontWeight="Medium"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="5">
+                            <FontIcon Glyph="&#xE814;" Foreground="#A1A1AA" FontSize="24" FontFamily="Segoe MDL2 Assets" Margin="0,0,0,5"/>
+                            <TextBlock x:Name="UptimeText" Text="0d 0h 0m" Foreground="#F4F4F5" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Border Margin="0,0,20,20" Width="220" Height="180" Background="#141419" BorderBrush="#22222C" BorderThickness="1" CornerRadius="12" Padding="20">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
+                            <FontIcon Glyph="&#xE902;" Foreground="#A3E635" FontSize="16" FontFamily="Segoe MDL2 Assets"/>
+                            <TextBlock Text="Running Processes" Foreground="#A1A1AA" FontSize="14" FontWeight="Medium"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="5">
+                            <FontIcon Glyph="&#xEC25;" Foreground="#A1A1AA" FontSize="24" FontFamily="Segoe MDL2 Assets" Margin="0,0,0,5"/>
+                            <TextBlock x:Name="ProcessesText" Text="0" Foreground="#F4F4F5" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+
+            </GridView.Items>
+        </GridView>
+
+        <Grid Margin="0,10,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.7*"/>
+                <ColumnDefinition Width="1.2*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Spacing="15" Margin="0,0,30,0">
+                <TextBlock Text="STORAGE VOLUMES" FontSize="14" FontWeight="Bold" Foreground="#71717A" CharacterSpacing="50"/>
+                <Border Background="#141419" BorderBrush="#22222C" BorderThickness="1" CornerRadius="12" Padding="20">
+                    <StackPanel x:Name="StoragePanel" Spacing="15"/>
+                </Border>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Spacing="15">
+                <TextBlock Text="SYSTEM INFORMATION" FontSize="14" FontWeight="Bold" Foreground="#71717A" CharacterSpacing="50"/>
+                <Border Background="#141419" BorderBrush="#22222C" BorderThickness="1" CornerRadius="12" Padding="20">
+                    <StackPanel Spacing="12">
+                        <TextBlock x:Name="OsText" Text="OS: Loading..." Foreground="#F4F4F5" FontSize="13" TextWrapping="Wrap"/>
+                        <TextBlock x:Name="UserText" Text="User: Loading..." Foreground="#A1A1AA" FontSize="13"/>
+                        <TextBlock x:Name="ArchitectureText" Text="Architecture: Loading..." Foreground="#A1A1AA" FontSize="13"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Grid>
+
+    </StackPanel>
+    </ScrollViewer>
+</Page>

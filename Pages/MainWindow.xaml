@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="MyTool.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MyTool"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="K-WinMod">
+
+    <Window.SystemBackdrop>
+        <MicaBackdrop />
+    </Window.SystemBackdrop>
+
+    <Grid Background="#0F0F12">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="MenuColumn" Width="240"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Background="#141419" BorderBrush="#22222C" BorderThickness="0,0,1,0" x:Name="MenuBorder">
+            <Grid Padding="12,20,12,20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Button Grid.Row="0" Click="ToggleMenu_Click" Background="Transparent" BorderThickness="0" Padding="12" HorizontalAlignment="Left" Margin="0,0,0,15">
+                    <FontIcon Glyph="&#xE700;" Foreground="#F4F4F5" FontSize="18" FontFamily="Segoe MDL2 Assets"/>
+                </Button>
+
+                <StackPanel x:Name="BrandPanel" Grid.Row="1" Margin="8,0,0,30" Orientation="Horizontal" Spacing="10">
+                    <FontIcon Glyph="&#xE945;" Foreground="#A3E635" FontSize="20" FontFamily="Segoe MDL2 Assets"/>
+                    <TextBlock Text="K-WINMOD" FontSize="16" FontWeight="Bold" Foreground="#F4F4F5" VerticalAlignment="Center" CharacterSpacing="160"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" Spacing="8">
+                    <Button Click="MenuButton_Click" Tag="DashboardPage" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="12" Background="Transparent" BorderThickness="0" CornerRadius="8">
+                        <StackPanel Orientation="Horizontal" Spacing="15">
+                            <FontIcon Glyph="&#xEA8A;" Foreground="#A1A1AA" FontSize="16" FontFamily="Segoe MDL2 Assets" Width="16"/>
+                            <TextBlock Text="Dashboard" Foreground="#F4F4F5" FontSize="14" FontWeight="Medium"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Click="MenuButton_Click" Tag="OptimizationPage" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="12" Background="Transparent" BorderThickness="0" CornerRadius="8">
+                        <StackPanel Orientation="Horizontal" Spacing="15">
+                            <FontIcon Glyph="&#xE713;" Foreground="#A1A1AA" FontSize="16" FontFamily="Segoe MDL2 Assets" Width="16"/>
+                            <TextBlock Text="Optimization" Foreground="#F4F4F5" FontSize="14" FontWeight="Medium"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <TextBlock x:Name="FooterText" Grid.Row="3" Text="v0.1.0-beta" Foreground="#3F3F46" FontSize="11" HorizontalAlignment="Center" FontFamily="Consolas"/>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Column="1" Padding="20">
+            <Frame x:Name="ContentFrame"/>
+        </Grid>
+
+        <Canvas Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Top" IsHitTestVisible="False">
+            <Border x:Name="NotificationToast"
+                    Width="500"
+                    Background="#1A1A22" 
+                    BorderBrush="#2D2D3D" 
+                    BorderThickness="1" 
+                    CornerRadius="8" 
+                    Padding="15"
+                    Visibility="Collapsed"
+                    Canvas.Top="-80">
+                <Border.Shadow>
+                    <ThemeShadow />
+                </Border.Shadow>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <FontIcon Grid.Column="0" Glyph="&#xE946;" Foreground="#A3E635" FontSize="16" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                    <TextBlock x:Name="StatusText" Grid.Column="1" Foreground="#F4F4F5" FontSize="13" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
+        </Canvas>
+
+    </Grid>
+</Window>
