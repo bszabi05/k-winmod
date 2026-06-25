@@ -1,6 +1,6 @@
 ﻿# K-WinMod
 
-[![Version](https://img.shields.io/badge/version-0.1.0--beta-green.svg)](https://github.com/kotrabdev/k-winmod)
+[![Version](https://img.shields.io/badge/version-0.1.1--beta-green.svg)](https://github.com/kotrabdev/k-winmod)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-blue.svg)]()
 
@@ -10,17 +10,27 @@ The application is built to deliver a transparent and safe optimization experien
 
 ---
 
-## 🚀 Key Features (v0.1.0-beta)
-
-The application architecture is broken down into completely isolated, dedicated **Engines** to ensure maximum safety and modularity:
-
-* **MemoryEngine (RAM Optimization):** Intelligently and safely flushes process working sets using the native Win32 API (`EmptyWorkingSet`).
-* **RegistryEngine (System Tweaks):** Radically disables unwanted Windows telemetry, data collection, and promotional tips via direct Registry modifications.
-* **DiskEngine (Storage Cleanup):** Safely scans user and system temporary (`Temp`) directories to sweep away unlocked junk files.
-* **NetworkEngine (Network Acceleration):** Performs a clean, native flush of the Windows DNS resolver cache to guarantee seamless network connectivity.
+---
 
 ---
-## 📦 Installation & Download / Letöltés
+
+## 🚀 Key Features
+
+**K-WinMod** gives you a collection of simple, powerful tools to speed up your PC, protect your privacy, and fix sudden hardware headaches with a single click:
+
+### 🧹 System Speedups & Cleanup
+* **Free Up RAM Memory:** Instantly clears out wasted memory from background apps to give your games and heavy software more breathing room.
+* **Clean Disk Garbage:** Scans and sweeps away hidden temporary junk files that Windows leaves behind, freeing up valuable storage space.
+* **Fix Internet Hiccups:** Flushes your computer's network DNS cache, which helps fix sudden website loading errors or connection drops.
+
+### 🔒 Privacy & Anti-Annoyance Toggles
+* **Block Windows Telemetry:** Completely shuts down Microsoft's background data collection, tracking, and system logging.
+* **Turn Off Ads & Popups:** Disables annoying built-in Windows tips, suggested apps, and promotional notifications on your lock screen and desktop.
+
+### 🛠️ Hardware Troubleshooting
+* **Unfreeze Laptop Touchpads:** If your laptop's touchpad suddenly locks up or stops moving, you can restart its entire background system instantly without rebooting your computer.
+* **Automatic Error Detection:** The moment you open the app, it automatically scans your computer for hardware issues. If it finds a problem with your touchpad, a yellow warning icon will alert you.
+* **Smart Log Files:** Every action or error is quietly saved into a daily text file in a `Logs` folder, making it super easy to diagnose issues if a fix fails.
 
 ### 📥 Direct Download
 You can always download the latest compiled, portable version of the application directly from the GitHub Releases page:
@@ -33,6 +43,14 @@ You can always download the latest compiled, portable version of the application
 * **Language:** C# 10+ / .NET 6+
 * **Design Language:** Fluent Design (Dark mode with custom neon green `#A3E635` accents)
 * **Architecture:** Exemplary layered structure (UI → `OptimizationService` Facade → Dedicated Core Engines)
+
+---
+
+## 📅 Version History & Changelog
+
+Looking for the latest updates, bug fixes, or want to see how the app has evolved? Check out our user-friendly changelog file:
+
+👉 **[Read the Full CHANGELOG.md](CHANGELOG.md)**
 
 ---
 
