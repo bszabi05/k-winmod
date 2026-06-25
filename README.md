@@ -10,10 +10,6 @@ The application is built to deliver a transparent and safe optimization experien
 
 ---
 
----
-
----
-
 ## 🚀 Key Features
 
 **K-WinMod** gives you a collection of simple, powerful tools to speed up your PC, protect your privacy, and fix sudden hardware headaches with a single click:
