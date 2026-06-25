@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using MyTool.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +31,7 @@ namespace MyTool.Engines
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Registry Read Error ({valueName}): {ex.Message}");
+                LoggerService.LogError($"Registry Read Error at path '{subKeyPath}' for value '{valueName}'", ex);
             }
             return defaultValue;
         }
@@ -53,7 +54,7 @@ namespace MyTool.Engines
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Registry Write Error ({valueName}): {ex.Message}");
+                LoggerService.LogError($"Registry Write Error at path '{subKeyPath}' for value '{valueName}' to {value}", ex);
             }
             return false;
         }

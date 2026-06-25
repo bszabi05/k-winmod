@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyTool.Services;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,18 +17,23 @@ namespace MyTool.Engines
         {
             return await Task.Run(() =>
             {
+                LoggerService.LogInfo("Disk cleanup task started.");
                 long bytesFreed = 0;
 
 
                 string userTemp = Path.GetTempPath();
+                LoggerService.LogInfo($"Cleaning User Temp directory: {userTemp}");
                 bytesFreed += ClearFolderDirectory(userTemp);
 
                 string sysTemp = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "Temp");
                 if (Directory.Exists(sysTemp))
                 {
+                    LoggerService.LogInfo($"Cleaning System Temp directory: {sysTemp}");
                     bytesFreed += ClearFolderDirectory(sysTemp);
                 }
 
+                double megabytes = Math.Round((double)bytesFreed / (1024 * 1024), 2);
+                LoggerService.LogInfo($"Disk cleanup task completed. Total storage reclaimed: {megabytes} MB.");
                 return bytesFreed;
             });
         }

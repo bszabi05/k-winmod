@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyTool.Services;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace MyTool.Engines
         {
             return await Task.Run(() =>
             {
+                LoggerService.LogInfo("Memory optimization process started.");
                 int optimizedCount = 0;
                 Process[] processes = Process.GetProcesses();
 
@@ -45,7 +47,7 @@ namespace MyTool.Engines
                         process.Dispose();
                     }
                 }
-
+                LoggerService.LogInfo($"Memory optimization finished. Trimmed working sets for {optimizedCount} processes.");
                 return optimizedCount;
             });
         }

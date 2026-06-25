@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyTool.Services;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -19,6 +20,7 @@ namespace MyTool.Engines
             {
                 try
                 {
+                    LoggerService.LogInfo("Initiating DNS cache flush via ipconfig.exe...");
                     ProcessStartInfo psi = new ProcessStartInfo
                     {
                         FileName = "ipconfig.exe",
@@ -33,13 +35,21 @@ namespace MyTool.Engines
                         if (p != null)
                         {
                             p.WaitForExit();
-                            return p.ExitCode == 0; 
+                            bool isSuccess = p.ExitCode == 0;
+
+                            if (isSuccess)
+                                LoggerService.LogInfo("DNS cache successfully flushed.");
+                            else
+                                LoggerService.LogError($"ipconfig.exe exited with non-zero code: {p.ExitCode}");
+
+                            return isSuccess;
                         }
                     }
                 }
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"DNS Flush Error: {ex.Message}");
+                    LoggerService.LogError("Critical error occurred during DNS cache flush", ex);
                 }
                 return false;
             });

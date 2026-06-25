@@ -20,6 +20,7 @@
   <ItemGroup>
     <None Remove="DashboardPage.xaml" />
     <None Remove="OptimizationPage.xaml" />
+    <None Remove="Pages\TroubleshootPage.xaml" />
   </ItemGroup>
 <ItemGroup>
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240428000" />
@@ -54,6 +55,11 @@
     <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="10.0.8" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Pages\TroubleshootPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="OptimizationPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -62,9 +68,6 @@
     <Page Update="DashboardPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Pages\" />
   </ItemGroup>
 
   <!--

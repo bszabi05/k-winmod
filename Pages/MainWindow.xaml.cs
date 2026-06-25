@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using MyTool.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -57,19 +58,30 @@ namespace MyTool
                 }
    
             }
+            LoggerService.LogInfo($"App started");
 
         }
 
-        private void MenuButton_Click(object sender, RoutedEventArgs e) // handler for menu buttons
+        private void MenuButton_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.Tag != null)
             {
                 string pageName = btn.Tag.ToString();
+
                 Type pageType = Type.GetType($"MyTool.{pageName}");
+
+                if (pageType == null)
+                {
+                    pageType = Type.GetType($"MyTool.Pages.{pageName}");
+                }
 
                 if (pageType != null)
                 {
                     ContentFrame.Navigate(pageType);
+                }
+                else
+                {
+               ///     ShowNotification($"Error: Could not find page type for MyTool.Pages.{pageName}");
                 }
             }
         }
