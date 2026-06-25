@@ -396,7 +396,6 @@ coverage*.info
 *.appx
 *.appxbundle
 *.appxupload
-CHANGELOG.md
 
 # Visual Studio cache files
 # files ending in .cache can be ignored
