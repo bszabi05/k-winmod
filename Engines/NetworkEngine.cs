@@ -54,5 +54,55 @@ namespace MyTool.Engines
                 return false;
             });
         }
+
+        /// <summary>
+        /// Full Reset of Winsock, IP stack and network interface configuration
+        /// </summary>
+        public async Task<bool> ResetNetworkStackAsync()
+        {
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    LoggerService.LogInfo("Starting Full Network Stack Reset...");
+
+                    // Combined commands for full network reset
+                    string psCommand = "netsh winsock reset; netsh int ip reset; ipconfig /release; ipconfig /renew; ipconfig /flushdns";
+
+                    ProcessStartInfo psInfo = new ProcessStartInfo
+                    {
+                        FileName = "powershell.exe",
+                        Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{psCommand}\"",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    };
+
+                    using (Process psProcess = Process.Start(psInfo))
+                    {
+                        if (psProcess != null)
+                        {
+                            psProcess.WaitForExit();
+                            bool isSuccess = psProcess.ExitCode == 0;
+
+                            if (isSuccess)
+                                LoggerService.LogInfo("Network stack successfully reset.");
+                            else
+                                LoggerService.LogError($"Network stack reset exited with code: {psProcess.ExitCode}");
+
+                            return isSuccess;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LoggerService.LogError("Critical error during Network Stack Reset", ex);
+                    return false;
+                }
+
+                return false;
+            });
+        }
     }
 }

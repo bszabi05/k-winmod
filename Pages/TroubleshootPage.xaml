@@ -11,14 +11,13 @@
         <StackPanel Spacing="30" Padding="10">
 
             <StackPanel Spacing="5">
-                <TextBlock Text="HARDWARE TROUBLESHOOT" FontSize="24" FontWeight="Bold" Foreground="#F4F4F5" CharacterSpacing="50"/>
-                <TextBlock Text="Diagnose hardware locks and quickly restart device drivers to restore system functionality." FontSize="13" Foreground="#71717A"/>
+                <TextBlock Text="SYSTEM &amp; HARDWARE TROUBLESHOOT" FontSize="24" FontWeight="Bold" Foreground="#F4F4F5" CharacterSpacing="50"/>
+                <TextBlock Text="Quickly restart drivers, reset core services, and resolve system bottlenecks to restore full functionality." FontSize="13" Foreground="#71717A"/>
             </StackPanel>
 
             <StackPanel Spacing="15" HorizontalAlignment="Left" MaxWidth="1000" Width="Auto">
 
-                <TextBlock Text="Available Hardware Fixes" FontSize="16" FontWeight="SemiBold" Foreground="#A1A1AA"/>
-
+                <TextBlock Text="Available One-Click Fixes" FontSize="16" FontWeight="SemiBold" Foreground="#A1A1AA"/>
                 <Border HorizontalAlignment="Stretch" Background="#141419" BorderBrush="#22222C" BorderThickness="1" CornerRadius="12" Padding="20">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -41,10 +40,224 @@
                             <ProgressRing x:Name="TouchpadProgress" IsActive="False" Width="20" Height="20" Foreground="#A3E635" Margin="0,0,5,0"/>
                             <Button x:Name="TouchpadFixButton" Click="FixTouchpad_Click" Content="Run Fix" Width="120" Background="#1A1A22" Foreground="#F4F4F5" BorderBrush="#2D2D3D" CornerRadius="6"/>
                         </StackPanel>
+
+                       
                     </Grid>
                 </Border>
 
-                
+                <Border HorizontalAlignment="Stretch" Background="#141419" BorderBrush="#22222C" BorderThickness="1" CornerRadius="12" Padding="20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Spacing="5" Margin="0,0,40,0">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <FontIcon Glyph="&#xE799;" Foreground="#A3E635" FontSize="16" FontFamily="Segoe MDL2 Assets"/>
+                                <TextBlock Text="Windows Audio Restart" Foreground="#F4F4F5" FontWeight="SemiBold"/>
+                            </StackPanel>
+                            <TextBlock Text="Restarts Windows Audio services to fix sound crackling, latency, or missing audio devices." 
+                                       FontSize="12" Foreground="#71717A" TextWrapping="Wrap"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
+                            <ProgressRing x:Name="AudioProgress" IsActive="False" Width="20" Height="20" Foreground="#A3E635" Margin="0,0,5,0"/>
+                            <Button x:Name="AudioFixButton" Click="FixAudio_Click" Content="Run Fix" Width="120" Background="#1A1A22" Foreground="#F4F4F5" BorderBrush="#2D2D3D" CornerRadius="6"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Border HorizontalAlignment="Stretch" Background="#141419" BorderBrush="#22222C" BorderThickness="1" CornerRadius="12" Padding="20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Spacing="5" Margin="0,0,40,0">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <FontIcon Glyph="&#xE737;" Foreground="#A3E635" FontSize="16" FontFamily="Segoe MDL2 Assets"/>
+                                <TextBlock Text="Restart Taskbar &amp; UI" Foreground="#F4F4F5" FontWeight="SemiBold"/>
+                            </StackPanel>
+                            <TextBlock Text="Restarts explorer.exe to resolve frozen taskbars, missing desktop icons, or unresponsive Start menu." 
+                       FontSize="12" Foreground="#71717A" TextWrapping="Wrap"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
+                            <ProgressRing x:Name="ExplorerProgress" IsActive="False" Width="20" Height="20" Foreground="#A3E635" Margin="0,0,5,0"/>
+                            <Button x:Name="ExplorerFixButton" Click="FixExplorer_Click" Content="Run Fix" Width="120" Background="#1A1A22" Foreground="#F4F4F5" BorderBrush="#2D2D3D" CornerRadius="6"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Border HorizontalAlignment="Stretch" Background="#141419" BorderBrush="#22222C" BorderThickness="1" CornerRadius="12" Padding="20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Spacing="5" Margin="0,0,40,0">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <FontIcon Glyph="&#xE839;" Foreground="#A3E635" FontSize="16" FontFamily="Segoe MDL2 Assets"/>
+                                <TextBlock Text="Reset Network Adapters" Foreground="#F4F4F5" FontWeight="SemiBold"/>
+                            </StackPanel>
+                            <TextBlock Text="Resets Winsock, IP stack, and renews DHCP configuration to fix Wi-Fi and connection drops." 
+                       FontSize="12" Foreground="#71717A" TextWrapping="Wrap"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
+                            <ProgressRing x:Name="NetworkProgress" IsActive="False" Width="20" Height="20" Foreground="#A3E635" Margin="0,0,5,0"/>
+                            <Button x:Name="NetworkFixButton" Click="FixNetwork_Click" Content="Run Fix" Width="120" Background="#1A1A22" Foreground="#F4F4F5" BorderBrush="#2D2D3D" CornerRadius="6"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Border HorizontalAlignment="Stretch" Background="#141419" BorderBrush="#22222C" BorderThickness="1" CornerRadius="12" Padding="20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Spacing="5" Margin="0,0,40,0">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <FontIcon Glyph="&#xE749;" Foreground="#A3E635" FontSize="16" FontFamily="Segoe MDL2 Assets"/>
+                                <TextBlock Text="Clear Print Queue" Foreground="#F4F4F5" FontWeight="SemiBold"/>
+                            </StackPanel>
+                            <TextBlock Text="Restarts the Print Spooler service and purges stuck documents blocking the printer." 
+                       FontSize="12" Foreground="#71717A" TextWrapping="Wrap"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
+                            <ProgressRing x:Name="PrinterProgress" IsActive="False" Width="20" Height="20" Foreground="#A3E635" Margin="0,0,5,0"/>
+                            <Button x:Name="PrinterFixButton" Click="FixPrinter_Click" Content="Run Fix" Width="120" Background="#1A1A22" Foreground="#F4F4F5" BorderBrush="#2D2D3D" CornerRadius="6"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- 6. Bluetooth Restart Card -->
+                <Border HorizontalAlignment="Stretch" Background="#141419" BorderBrush="#22222C" BorderThickness="1" CornerRadius="12" Padding="20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Spacing="5" Margin="0,0,40,0">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <FontIcon Glyph="&#xE702;" Foreground="#A3E635" FontSize="16" FontFamily="Segoe MDL2 Assets"/>
+                                <TextBlock Text="Restart Bluetooth Stack" Foreground="#F4F4F5" FontWeight="SemiBold"/>
+                            </StackPanel>
+                            <TextBlock Text="Restarts the Bluetooth Support Service to fix stuck connections or missing devices." 
+                       FontSize="12" Foreground="#71717A" TextWrapping="Wrap"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
+                            <ProgressRing x:Name="BluetoothProgress" IsActive="False" Width="20" Height="20" Foreground="#A3E635" Margin="0,0,5,0"/>
+                            <Button x:Name="BluetoothFixButton" Click="FixBluetooth_Click" Content="Run Fix" Width="120" Background="#1A1A22" Foreground="#F4F4F5" BorderBrush="#2D2D3D" CornerRadius="6"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- 7. Windows Update Cache Clear Card -->
+                <Border HorizontalAlignment="Stretch" Background="#141419" BorderBrush="#22222C" BorderThickness="1" CornerRadius="12" Padding="20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Spacing="5" Margin="0,0,40,0">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <FontIcon Glyph="&#xE72C;" Foreground="#A3E635" FontSize="16" FontFamily="Segoe MDL2 Assets"/>
+                                <TextBlock Text="Purge Update Cache" Foreground="#F4F4F5" FontWeight="SemiBold"/>
+                            </StackPanel>
+                            <TextBlock Text="Clears stuck Windows Update download files and resets update service state." 
+                       FontSize="12" Foreground="#71717A" TextWrapping="Wrap"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
+                            <ProgressRing x:Name="UpdateCacheProgress" IsActive="False" Width="20" Height="20" Foreground="#A3E635" Margin="0,0,5,0"/>
+                            <Button x:Name="UpdateCacheFixButton" Click="FixUpdateCache_Click" Content="Run Fix" Width="120" Background="#1A1A22" Foreground="#F4F4F5" BorderBrush="#2D2D3D" CornerRadius="6"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- 8. System File Repair Card -->
+                <Border HorizontalAlignment="Stretch" Background="#141419" BorderBrush="#22222C" BorderThickness="1" CornerRadius="12" Padding="20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Spacing="5" Margin="0,0,40,0">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <!-- Rendszer / Pajzs ikon (Segoe MDL2 Assets: &#xEA18;) -->
+                                <FontIcon Glyph="&#xEA18;" Foreground="#A3E635" FontSize="16" FontFamily="Segoe MDL2 Assets"/>
+                                <TextBlock Text="Repair System Files (SFC / DISM)" Foreground="#F4F4F5" FontWeight="SemiBold"/>
+                            </StackPanel>
+                            <TextBlock Text="Scans and automatically repairs corrupt Windows system files and image integrity." 
+                       FontSize="12" Foreground="#71717A" TextWrapping="Wrap"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
+                            <ProgressRing x:Name="SfcProgress" IsActive="False" Width="20" Height="20" Foreground="#A3E635" Margin="0,0,5,0"/>
+                            <Button x:Name="SfcFixButton" Click="FixSfc_Click" Content="Run Fix" Width="120" Background="#1A1A22" Foreground="#F4F4F5" BorderBrush="#2D2D3D" CornerRadius="6"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- 9. GPU Driver Reset Card -->
+                <Border HorizontalAlignment="Stretch" Background="#141419" BorderBrush="#22222C" BorderThickness="1" CornerRadius="12" Padding="20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Spacing="5" Margin="0,0,40,0">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <FontIcon Glyph="&#xE7F4;" Foreground="#A3E635" FontSize="16" FontFamily="Segoe MDL2 Assets"/>
+                                <TextBlock Text="Reset Graphics Driver" Foreground="#F4F4F5" FontWeight="SemiBold"/>
+                            </StackPanel>
+                            <TextBlock Text="Restarts active GPU display adapters to recover from screen freezes or glitches." 
+                       FontSize="12" Foreground="#71717A" TextWrapping="Wrap"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
+                            <ProgressRing x:Name="GpuProgress" IsActive="False" Width="20" Height="20" Foreground="#A3E635" Margin="0,0,5,0"/>
+                            <Button x:Name="GpuFixButton" Click="FixGpu_Click" Content="Run Fix" Width="120" Background="#1A1A22" Foreground="#F4F4F5" BorderBrush="#2D2D3D" CornerRadius="6"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- 10. Clear Temp & Junk Files Card -->
+                <Border HorizontalAlignment="Stretch" Background="#141419" BorderBrush="#22222C" BorderThickness="1" CornerRadius="12" Padding="20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Spacing="5" Margin="0,0,40,0">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <FontIcon Glyph="&#xE74D;" Foreground="#A3E635" FontSize="16" FontFamily="Segoe MDL2 Assets"/>
+                                <TextBlock Text="Purge System Temp &amp; Junk" Foreground="#F4F4F5" FontWeight="SemiBold"/>
+                            </StackPanel>
+                            <TextBlock Text="Deletes leftover temporary files, Prefetch cache, and system junk to free up storage." 
+                       FontSize="12" Foreground="#71717A" TextWrapping="Wrap"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
+                            <ProgressRing x:Name="TempProgress" IsActive="False" Width="20" Height="20" Foreground="#A3E635" Margin="0,0,5,0"/>
+                            <Button x:Name="TempFixButton" Click="FixTemp_Click" Content="Run Fix" Width="120" Background="#1A1A22" Foreground="#F4F4F5" BorderBrush="#2D2D3D" CornerRadius="6"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
 
             </StackPanel>
 

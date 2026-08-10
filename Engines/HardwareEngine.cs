@@ -170,5 +170,220 @@ namespace MyTool.Engines
                 return false;
             });
         }
+
+        /// <summary>
+        /// Restarts Windows Audio Services (Audiosrv and AudioEndpointBuilder)
+        /// </summary>
+        public async Task<bool> RestartAudioServicesAsync()
+        {
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    LoggerService.LogInfo("Starting Audio Services reset process...");
+
+                    // PowerShell command to force restart Windows Audio services
+                    string psCommand = "Get-Service Audiosrv, AudioEndpointBuilder | Restart-Service -Force";
+
+                    ProcessStartInfo psInfo = new ProcessStartInfo
+                    {
+                        FileName = "powershell.exe",
+                        Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{psCommand}\"",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    };
+
+                    using (Process psProcess = Process.Start(psInfo))
+                    {
+                        if (psProcess != null)
+                        {
+                            string errorOutput = psProcess.StandardError.ReadToEnd();
+                            psProcess.WaitForExit();
+
+                            if (psProcess.ExitCode == 0)
+                            {
+                                LoggerService.LogInfo("Audio services successfully restarted.");
+                                return true;
+                            }
+                            else
+                            {
+                                LoggerService.LogError($"Failed to restart Audio services. PowerShell Error: {errorOutput}");
+                                return false;
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LoggerService.LogError("Critical error during Audio services reset", ex);
+                    return false;
+                }
+
+                return false;
+            });
+        }
+
+       
+
+        /// <summary>
+        /// Clears stuck print jobs by restarting Spooler service and wiping the spool queue folder.
+        /// </summary>
+        public async Task<bool> ClearPrintSpoolerAsync()
+        {
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    LoggerService.LogInfo("Starting Print Spooler cleanup process...");
+
+                    // PowerShell commands to stop spooler, delete files, and start spooler again
+                    string psCommand = "Stop-Service -Name Spooler -Force; " +
+                                       "Remove-Item -Path \"$env:SystemRoot\\System32\\spool\\PRINTERS\\*\" -Force -Recurse -ErrorAction SilentlyContinue; " +
+                                       "Start-Service -Name Spooler";
+
+                    ProcessStartInfo psInfo = new ProcessStartInfo
+                    {
+                        FileName = "powershell.exe",
+                        Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{psCommand}\"",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    };
+
+                    using (Process psProcess = Process.Start(psInfo))
+                    {
+                        if (psProcess != null)
+                        {
+                            psProcess.WaitForExit();
+                            if (psProcess.ExitCode == 0)
+                            {
+                                LoggerService.LogInfo("Print Spooler queue cleared and service restarted successfully.");
+                                return true;
+                            }
+                            else
+                            {
+                                string error = psProcess.StandardError.ReadToEnd();
+                                LoggerService.LogError($"Failed to clear Print Spooler. PowerShell error: {error}");
+                                return false;
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LoggerService.LogError("Critical error during Print Spooler reset", ex);
+                    return false;
+                }
+
+                return false;
+            });
+        }
+
+        /// <summary>
+        /// Restarts the Windows Bluetooth Support Service (bthserv).
+        /// </summary>
+        public async Task<bool> RestartBluetoothAsync()
+        {
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    LoggerService.LogInfo("Starting Bluetooth service restart...");
+
+                    string psCommand = "Restart-Service -Name 'bthserv' -Force";
+
+                    ProcessStartInfo psInfo = new ProcessStartInfo
+                    {
+                        FileName = "powershell.exe",
+                        Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{psCommand}\"",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    };
+
+                    using (Process psProcess = Process.Start(psInfo))
+                    {
+                        if (psProcess != null)
+                        {
+                            psProcess.WaitForExit();
+                            bool success = psProcess.ExitCode == 0;
+                            if (success)
+                                LoggerService.LogInfo("Bluetooth service restarted successfully.");
+                            else
+                                LoggerService.LogError($"Bluetooth service restart failed with exit code: {psProcess.ExitCode}");
+
+                            return success;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LoggerService.LogError("Critical error during Bluetooth service restart", ex);
+                    return false;
+                }
+
+                return false;
+            });
+        }
+
+        
+
+       
+
+        /// <summary>
+        /// Restarts display driver components to fix screen flickering or GPU hangs.
+        /// </summary>
+        public async Task<bool> RestartGpuDriverAsync()
+        {
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    LoggerService.LogInfo("Restarting GPU display driver subsystem...");
+
+                    // PowerShell script to restart active PnP display adapters
+                    string psCommand = "Get-PnpDevice -Class 'Display' -Status 'OK' | Disable-PnpDevice -Confirm:$false; " +
+                                       "Start-Sleep -Seconds 1; " +
+                                       "Get-PnpDevice -Class 'Display' | Enable-PnpDevice -Confirm:$false";
+
+                    ProcessStartInfo psInfo = new ProcessStartInfo
+                    {
+                        FileName = "powershell.exe",
+                        Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{psCommand}\"",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    };
+
+                    using (Process psProcess = Process.Start(psInfo))
+                    {
+                        if (psProcess != null)
+                        {
+                            psProcess.WaitForExit();
+                            bool success = psProcess.ExitCode == 0;
+                            if (success)
+                                LoggerService.LogInfo("GPU Driver restarted successfully.");
+                            else
+                                LoggerService.LogError($"GPU Driver restart failed with exit code: {psProcess.ExitCode}");
+
+                            return success;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LoggerService.LogError("Critical error during GPU driver restart", ex);
+                    return false;
+                }
+
+                return false;
+            });
+        }
+
     }
 }
