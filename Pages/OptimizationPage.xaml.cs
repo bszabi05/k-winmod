@@ -33,6 +33,21 @@ namespace MyTool
             TipsToggle.Toggled -= TipsToggle_Toggled;
             TipsToggle.IsOn = _optimizationService.IsTipsEnabled();
             TipsToggle.Toggled += TipsToggle_Toggled;
+
+            // Ultimate Performance status
+            UltimatePerfToggle.Toggled -= UltimatePerfToggle_Toggled;
+            UltimatePerfToggle.IsOn = _optimizationService.IsUltimatePerformanceActive();
+            UltimatePerfToggle.Toggled += UltimatePerfToggle_Toggled;
+
+            // Game Mode status
+            GameModeToggle.Toggled -= GameModeToggle_Toggled;
+            GameModeToggle.IsOn = _optimizationService.IsGameModeEnabled();
+            GameModeToggle.Toggled += GameModeToggle_Toggled;
+
+            // Bing Search status
+            BingSearchToggle.Toggled -= BingSearchToggle_Toggled;
+            BingSearchToggle.IsOn = _optimizationService.IsBingSearchDisabled();
+            BingSearchToggle.Toggled += BingSearchToggle_Toggled;
         }
 
         
@@ -108,6 +123,66 @@ namespace MyTool
             }
 
             TipsToggle.Toggled += TipsToggle_Toggled;
+        }
+
+        private async void UltimatePerfToggle_Toggled(object sender, RoutedEventArgs e)
+        {
+            bool shouldEnable = UltimatePerfToggle.IsOn;
+            MainWindow.Instance.ShowNotification(shouldEnable ? "Enabling Ultimate Performance Mode..." : "Restoring default power plan...");
+
+            UltimatePerfToggle.Toggled -= UltimatePerfToggle_Toggled;
+            bool success = await _optimizationService.SetUltimatePerformanceStateAsync(shouldEnable);
+
+            if (success)
+            {
+                MainWindow.Instance.ShowNotification(shouldEnable ? "Ultimate Performance power plan ACTIVATED." : "Power plan restored to Balanced.");
+            }
+            else
+            {
+                MainWindow.Instance.ShowNotification("Failed to update power plan. Run as Administrator.");
+                UltimatePerfToggle.IsOn = !shouldEnable;
+            }
+            UltimatePerfToggle.Toggled += UltimatePerfToggle_Toggled;
+        }
+
+        private async void GameModeToggle_Toggled(object sender, RoutedEventArgs e)
+        {
+            bool shouldEnable = GameModeToggle.IsOn;
+            MainWindow.Instance.ShowNotification(shouldEnable ? "Enabling Windows Game Mode..." : "Disabling Windows Game Mode...");
+
+            GameModeToggle.Toggled -= GameModeToggle_Toggled;
+            bool success = await _optimizationService.SetGameModeStateAsync(shouldEnable);
+
+            if (success)
+            {
+                MainWindow.Instance.ShowNotification(shouldEnable ? "Windows Game Mode ENABLED." : "Windows Game Mode DISABLED.");
+            }
+            else
+            {
+                MainWindow.Instance.ShowNotification("Failed to change Game Mode settings.");
+                GameModeToggle.IsOn = !shouldEnable;
+            }
+            GameModeToggle.Toggled += GameModeToggle_Toggled;
+        }
+
+        private async void BingSearchToggle_Toggled(object sender, RoutedEventArgs e)
+        {
+            bool shouldDisable = BingSearchToggle.IsOn;
+            MainWindow.Instance.ShowNotification(shouldDisable ? "Disabling Bing Search in Start Menu..." : "Enabling Bing Search in Start Menu...");
+
+            BingSearchToggle.Toggled -= BingSearchToggle_Toggled;
+            bool success = await _optimizationService.SetBingSearchDisabledStateAsync(shouldDisable);
+
+            if (success)
+            {
+                MainWindow.Instance.ShowNotification(shouldDisable ? "Start Menu Bing Search DISABLED." : "Start Menu Bing Search ENABLED.");
+            }
+            else
+            {
+                MainWindow.Instance.ShowNotification("Failed to change Start Menu Search policies.");
+                BingSearchToggle.IsOn = !shouldDisable;
+            }
+            BingSearchToggle.Toggled += BingSearchToggle_Toggled;
         }
     }
 }

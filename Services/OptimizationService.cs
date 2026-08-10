@@ -17,6 +17,8 @@ namespace MyTool.Services
         private readonly MemoryEngine _memoryEngine = new MemoryEngine();
         private readonly DiskEngine _diskEngine = new DiskEngine();
         private readonly NetworkEngine _networkEngine = new NetworkEngine();
+        private readonly SystemEngine _systemEngine = new SystemEngine();
+
 
         // Path for registry keys
         private const string TelemetryPath = @"Software\Policies\Microsoft\Windows\DataCollection";
@@ -25,6 +27,12 @@ namespace MyTool.Services
         private const string TipsPath = @"Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager";
         private const string SoftLandingValue = "SubscribedContent-338389Enabled";
         private const string FeedbackValue = "SubscribedContent-338387Enabled";
+
+        private const string GameModePath = @"Software\Microsoft\GameBar";
+        private const string GameModeValue = "AllowAutoGameMode";
+
+        private const string BingSearchPath = @"Software\Policies\Microsoft\Windows\Explorer";
+        private const string BingSearchValue = "DisableSearchBoxSuggestions";
 
         // Telemetry functions
         public bool IsTelemetryEnabled()
@@ -76,6 +84,36 @@ namespace MyTool.Services
         public async Task<long> CleanTemporaryFilesAsync()
         {
             return await _diskEngine.CleanTemporaryFilesAsync();
+        }
+
+        public bool IsGameModeEnabled()
+        {
+            return _systemEngine.IsGameModeEnabled(GameModePath, GameModeValue);
+        }
+
+        public async Task<bool> SetGameModeStateAsync(bool enable)
+        {
+            return await _systemEngine.SetGameModeStateAsync(GameModePath, GameModeValue, enable);
+        }
+
+        public bool IsBingSearchDisabled()
+        {
+            return _systemEngine.IsBingSearchDisabled(BingSearchPath, BingSearchValue);
+        }
+
+        public async Task<bool> SetBingSearchDisabledStateAsync(bool disable)
+        {
+            return await _systemEngine.SetBingSearchDisabledStateAsync(BingSearchPath, BingSearchValue, disable);
+        }
+
+        public bool IsUltimatePerformanceActive()
+        {
+            return _systemEngine.IsUltimatePerformanceActive();
+        }
+
+        public async Task<bool> SetUltimatePerformanceStateAsync(bool enable)
+        {
+            return await _systemEngine.SetUltimatePerformanceStateAsync(enable);
         }
     }
 }

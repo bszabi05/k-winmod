@@ -127,6 +127,61 @@
                         <ToggleSwitch x:Name="TipsToggle" Grid.Column="1" OffContent="Disabled" OnContent="Enabled" VerticalAlignment="Center"/>
                     </Grid>
                 </Border>
+
+                <!--  Ultimate Performance -->
+                <Border HorizontalAlignment="Stretch" Background="#141419" BorderBrush="#22222C" BorderThickness="1" CornerRadius="12" Padding="20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Spacing="5" Margin="0,0,40,0">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <FontIcon Glyph="&#xE945;" Foreground="#A3E635" FontSize="16" FontFamily="Segoe MDL2 Assets"/>
+                                <TextBlock Text="Ultimate Performance Power Plan" Foreground="#F4F4F5" FontWeight="SemiBold"/>
+                            </StackPanel>
+                            <TextBlock Text="Unlocks and activates the hidden Windows Ultimate Performance profile to eliminate power-saving micro-latencies." FontSize="12" Foreground="#71717A" TextWrapping="Wrap"/>
+                        </StackPanel>
+                        <ToggleSwitch x:Name="UltimatePerfToggle" Grid.Column="1" OffContent="Disabled" OnContent="Enabled" VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+
+                <!-- Game Mode -->
+                <Border HorizontalAlignment="Stretch" Background="#141419" BorderBrush="#22222C" BorderThickness="1" CornerRadius="12" Padding="20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Spacing="5" Margin="0,0,40,0">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <FontIcon Glyph="&#xE7FC;" Foreground="#A3E635" FontSize="16" FontFamily="Segoe MDL2 Assets"/>
+                                <TextBlock Text="Windows Game Mode" Foreground="#F4F4F5" FontWeight="SemiBold"/>
+                            </StackPanel>
+                            <TextBlock Text="Prioritizes system resources for active games while suppressing background tasks." FontSize="12" Foreground="#71717A" TextWrapping="Wrap"/>
+                        </StackPanel>
+                        <ToggleSwitch x:Name="GameModeToggle" Grid.Column="1" OffContent="Disabled" OnContent="Enabled" VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+
+                <!-- Start Menu Bing Search -->
+                <Border HorizontalAlignment="Stretch" Background="#141419" BorderBrush="#22222C" BorderThickness="1" CornerRadius="12" Padding="20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Spacing="5" Margin="0,0,40,0">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <FontIcon Glyph="&#xE721;" Foreground="#A3E635" FontSize="16" FontFamily="Segoe MDL2 Assets"/>
+                                <TextBlock Text="Disable Bing Search in Start Menu" Foreground="#F4F4F5" FontWeight="SemiBold"/>
+                            </StackPanel>
+                            <TextBlock Text="Prevents Windows from searching web results via Bing in the Start menu for faster local searches." FontSize="12" Foreground="#71717A" TextWrapping="Wrap"/>
+                        </StackPanel>
+                        <ToggleSwitch x:Name="BingSearchToggle" Grid.Column="1" OffContent="Disabled" OnContent="Enabled" VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+                
             </StackPanel>
 
 
