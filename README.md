@@ -40,6 +40,13 @@ The application is built to deliver a transparent and safe optimization experien
 * **Architecture:** Exemplary layered structure (UI → `OptimizationService` Facade → Dedicated Core Engines)
 
 ---
+## 📦 Installation & Download
+
+### 📥 Direct Download
+You can always download the latest compiled, portable version of the application directly from the GitHub Releases page:
+👉 **[Download K-WinMod Latest Release](https://github.com/bszabi05/k-winmod/releases)**
+
+---
 
 ## 📅 Version History & Changelog
 
