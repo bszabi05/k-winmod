@@ -12,7 +12,7 @@ namespace MyTool.Engines
         /// </summary>
         public async Task<bool> RestartTouchpadDriverAsync()
         {
-            return await Task.Run(() =>
+            return await Task.Run(async () =>
             {
                 try
                 {
@@ -57,7 +57,7 @@ namespace MyTool.Engines
                         return false;
                     }
 
-                    Task.Delay(1000).Wait();
+                    await Task.Delay(1000);
 
                     bool enableResult = RunPnPUtil($"/enable-device \"{targetId}\"");
 

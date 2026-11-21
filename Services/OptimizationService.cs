@@ -12,13 +12,26 @@ namespace MyTool.Services
 {
     public class OptimizationService
     {
-        //Loading engines
-        private readonly RegistryEngine _registryEngine = new RegistryEngine();
-        private readonly MemoryEngine _memoryEngine = new MemoryEngine();
-        private readonly DiskEngine _diskEngine = new DiskEngine();
-        private readonly NetworkEngine _networkEngine = new NetworkEngine();
-        private readonly SystemEngine _systemEngine = new SystemEngine();
+        // Loading engines
+        private readonly IRegistryEngine _registryEngine;
+        private readonly MemoryEngine _memoryEngine;
+        private readonly DiskEngine _diskEngine;
+        private readonly NetworkEngine _networkEngine;
+        private readonly SystemEngine _systemEngine;
 
+        public OptimizationService(
+            IRegistryEngine? registryEngine = null,
+            MemoryEngine? memoryEngine = null,
+            DiskEngine? diskEngine = null,
+            NetworkEngine? networkEngine = null,
+            SystemEngine? systemEngine = null)
+        {
+            _registryEngine = registryEngine ?? new RegistryEngine();
+            _memoryEngine = memoryEngine ?? new MemoryEngine();
+            _diskEngine = diskEngine ?? new DiskEngine();
+            _networkEngine = networkEngine ?? new NetworkEngine();
+            _systemEngine = systemEngine ?? new SystemEngine(_registryEngine);
+        }
 
         // Path for registry keys
         private const string TelemetryPath = @"Software\Policies\Microsoft\Windows\DataCollection";
@@ -37,8 +50,13 @@ namespace MyTool.Services
         // Telemetry functions
         public bool IsTelemetryEnabled()
         {
-            // Enabled by default
-            return _registryEngine.GetDWordValue(TelemetryPath, TelemetryValueName, 1) == 1;
+            // Windows Telemetry policy is primarily enforced in HKLM
+            int hklmVal = _registryEngine.GetDWordValue(TelemetryPath, TelemetryValueName, -1, Microsoft.Win32.RegistryHive.LocalMachine);
+            if (hklmVal != -1)
+            {
+                return hklmVal != 0;
+            }
+            return _registryEngine.GetDWordValue(TelemetryPath, TelemetryValueName, 1, Microsoft.Win32.RegistryHive.CurrentUser) != 0;
         }
 
         public async Task<bool> SetTelemetryStateAsync(bool enable)
@@ -46,7 +64,9 @@ namespace MyTool.Services
             return await Task.Run(() =>
             {
                 int rawValue = enable ? 1 : 0;
-                return _registryEngine.SetDWordValue(TelemetryPath, TelemetryValueName, rawValue);
+                bool s1 = _registryEngine.SetDWordValue(TelemetryPath, TelemetryValueName, rawValue, Microsoft.Win32.RegistryHive.LocalMachine);
+                bool s2 = _registryEngine.SetDWordValue(TelemetryPath, TelemetryValueName, rawValue, Microsoft.Win32.RegistryHive.CurrentUser);
+                return s1 || s2;
             });
         }
 

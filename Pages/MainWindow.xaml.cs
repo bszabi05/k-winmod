@@ -22,9 +22,9 @@ namespace MyTool
     public partial class MainWindow : Window
     {
         private bool isMenuOpen = true;
-        public static MainWindow Instance { get; private set; }
+        public static MainWindow Instance { get; private set; } = null!;
 
-        private System.Threading.CancellationTokenSource _notificationCts;
+        private System.Threading.CancellationTokenSource? _notificationCts;
 
         public MainWindow()
         {

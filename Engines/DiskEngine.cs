@@ -32,10 +32,18 @@ namespace MyTool.Engines
                     bytesFreed += ClearFolderDirectory(sysTemp);
                 }
 
-                double megabytes = Math.Round((double)bytesFreed / (1024 * 1024), 2);
+                double megabytes = BytesToMegaBytes(bytesFreed);
                 LoggerService.LogInfo($"Disk cleanup task completed. Total storage reclaimed: {megabytes} MB.");
                 return bytesFreed;
             });
+        }
+
+        /// <summary>
+        /// Converts raw bytes to megabytes with 2 decimal precision.
+        /// </summary>
+        public static double BytesToMegaBytes(long bytes)
+        {
+            return Math.Round((double)bytes / (1024 * 1024), 2);
         }
 
         private long ClearFolderDirectory(string folderPath)

@@ -1,33 +1,21 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using MyTool.Services;
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using System.Diagnostics;
-
 
 namespace MyTool
 {
     public partial class DashboardPage : Page
     {
-        private DispatcherTimer timer;
-        private PerformanceCounter diskCounter;
-        private PerformanceCounter networkCounter;
-        private PerformanceCounter cpuCounter;
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool GetPhysicallyInstalledSystemMemory(out long TotalMemoryInKilobytes);
+        private DispatcherTimer? _timer;
+        private PerformanceCounter? _diskCounter;
+        private PerformanceCounter? _networkCounter;
+        private PerformanceCounter? _cpuCounter;
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
         private class MEMORYSTATUSEX
@@ -52,124 +40,231 @@ namespace MyTool
         {
             this.InitializeComponent();
 
-            cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
-            diskCounter = new PerformanceCounter("PhysicalDisk", "% Disk Time", "_Total");
-
-            PerformanceCounterCategory category = new PerformanceCounterCategory("Network Interface");
-            string[] instanceNames = category.GetInstanceNames();
-
-            if (instanceNames.Length > 0)
-            {
-                string firstInterface = instanceNames[0];
-                networkCounter = new PerformanceCounter("Network Interface", "Bytes Received/sec", firstInterface);
-            }
-
-            timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(1);
-            timer.Tick += Timer_Tick;
-            timer.Start();
-
-            UpdateMetrics();
-            LoadSystemInfo();
-            LoadStorageDrives();
-
+            this.Loaded += DashboardPage_Loaded;
+            this.Unloaded += DashboardPage_Unloaded;
         }
 
-        private void Timer_Tick(object sender, object e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            StartMonitoring();
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            StopMonitoring();
+        }
+
+        private void DashboardPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            StartMonitoring();
+        }
+
+        private void DashboardPage_Unloaded(object sender, RoutedEventArgs e)
+        {
+            StopMonitoring();
+        }
+
+        private void StartMonitoring()
+        {
+            try
+            {
+                if (_cpuCounter == null)
+                    _cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+
+                if (_diskCounter == null)
+                    _diskCounter = new PerformanceCounter("PhysicalDisk", "% Disk Time", "_Total");
+
+                if (_networkCounter == null)
+                {
+                    try
+                    {
+                        var category = new PerformanceCounterCategory("Network Interface");
+                        string[] instanceNames = category.GetInstanceNames();
+                        if (instanceNames.Length > 0)
+                        {
+                            string targetInterface = instanceNames.FirstOrDefault(name =>
+                                !name.Contains("Loopback", StringComparison.OrdinalIgnoreCase) &&
+                                !name.Contains("isatap", StringComparison.OrdinalIgnoreCase)) ?? instanceNames[0];
+                            _networkCounter = new PerformanceCounter("Network Interface", "Bytes Received/sec", targetInterface);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        LoggerService.LogError("Failed to initialize Network PerformanceCounter", ex);
+                    }
+                }
+
+                if (_timer == null)
+                {
+                    _timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+                    _timer.Tick += Timer_Tick;
+                }
+
+                if (!_timer.IsEnabled)
+                {
+                    _timer.Start();
+                }
+
+                UpdateMetrics();
+                LoadSystemInfo();
+                LoadStorageDrives();
+            }
+            catch (Exception ex)
+            {
+                LoggerService.LogError("Error starting Dashboard monitoring", ex);
+            }
+        }
+
+        private void StopMonitoring()
+        {
+            try
+            {
+                if (_timer != null)
+                {
+                    _timer.Stop();
+                    _timer.Tick -= Timer_Tick;
+                    _timer = null;
+                }
+
+                _cpuCounter?.Dispose();
+                _cpuCounter = null;
+
+                _diskCounter?.Dispose();
+                _diskCounter = null;
+
+                _networkCounter?.Dispose();
+                _networkCounter = null;
+            }
+            catch (Exception ex)
+            {
+                LoggerService.LogError("Error stopping Dashboard monitoring", ex);
+            }
+        }
+
+        private void Timer_Tick(object? sender, object e)
         {
             UpdateMetrics();
         }
 
         private void UpdateMetrics()
         {
-            float cpuUsage = cpuCounter.NextValue();
-            CpuRing.Value = cpuUsage;
-            CpuText.Text = $"{Math.Round(cpuUsage)}%";
-
-            MEMORYSTATUSEX memStatus = new MEMORYSTATUSEX();
-            if (GlobalMemoryStatusEx(memStatus))
+            try
             {
-                uint ramUsagePercentage = memStatus.dwMemoryLoad;
-                RamRing.Value = ramUsagePercentage;
-                RamText.Text = $"{ramUsagePercentage}%";
-            }
-
-            float diskUsage = diskCounter.NextValue();
-            DiskRing.Value = diskUsage > 100 ? 100 : diskUsage;
-            DiskText.Text = $"{Math.Round(diskUsage)}%";
-
-            if (networkCounter != null)
-            {
-                float networkBytes = networkCounter.NextValue();
-                double networkKb = networkBytes / 1024;
-
-                if (networkKb > 1024)
+                if (_cpuCounter != null)
                 {
-                    NetworkText.Text = $"{Math.Round(networkKb / 1024, 1)} MB/s";
+                    float cpuUsage = _cpuCounter.NextValue();
+                    CpuRing.Value = cpuUsage;
+                    CpuText.Text = $"{Math.Round(cpuUsage)}%";
+                }
+
+                var memStatus = new MEMORYSTATUSEX();
+                if (GlobalMemoryStatusEx(memStatus))
+                {
+                    uint ramUsagePercentage = memStatus.dwMemoryLoad;
+                    RamRing.Value = ramUsagePercentage;
+                    RamText.Text = $"{ramUsagePercentage}%";
+                }
+
+                if (_diskCounter != null)
+                {
+                    float diskUsage = _diskCounter.NextValue();
+                    DiskRing.Value = diskUsage > 100 ? 100 : diskUsage;
+                    DiskText.Text = $"{Math.Round(diskUsage)}%";
+                }
+
+                if (_networkCounter != null)
+                {
+                    float networkBytes = _networkCounter.NextValue();
+                    double networkKb = networkBytes / 1024;
+
+                    if (networkKb > 1024)
+                    {
+                        NetworkText.Text = $"{Math.Round(networkKb / 1024, 1)} MB/s";
+                    }
+                    else
+                    {
+                        NetworkText.Text = $"{Math.Round(networkKb)} KB/s";
+                    }
                 }
                 else
                 {
-                    NetworkText.Text = $"{Math.Round(networkKb)} KB/s";
+                    NetworkText.Text = "N/A";
                 }
+
+                TimeSpan uptime = TimeSpan.FromMilliseconds(Environment.TickCount64);
+                UptimeText.Text = $"{uptime.Days}d {uptime.Hours}h {uptime.Minutes}m";
+
+                int processCount = Process.GetProcesses().Length;
+                ProcessesText.Text = processCount.ToString();
             }
-            else
+            catch (Exception ex)
             {
-                NetworkText.Text = "N/A";
+                LoggerService.LogError("Error updating Dashboard metrics", ex);
             }
-            TimeSpan uptime = TimeSpan.FromMilliseconds(Environment.TickCount64);
-            UptimeText.Text = $"{uptime.Days}d {uptime.Hours}h {uptime.Minutes}m";
-
-            int processCount = Process.GetProcesses().Length;
-            ProcessesText.Text = processCount.ToString();
-
         }
 
         private void LoadSystemInfo()
         {
-            OsText.Text = $"OS: {Environment.OSVersion.VersionString}";
-            UserText.Text = $"User: {Environment.UserName} @ {Environment.MachineName}";
-            ArchitectureText.Text = $"Architecture: {Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE")} ({RuntimeInformation.ProcessArchitecture})";
+            try
+            {
+                OsText.Text = $"OS: {Environment.OSVersion.VersionString}";
+                UserText.Text = $"User: {Environment.UserName} @ {Environment.MachineName}";
+                ArchitectureText.Text = $"Architecture: {Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE")} ({RuntimeInformation.ProcessArchitecture})";
+            }
+            catch (Exception ex)
+            {
+                LoggerService.LogError("Error loading system info", ex);
+            }
         }
 
         private void LoadStorageDrives()
         {
-            StoragePanel.Children.Clear();
-
-            foreach (var drive in System.IO.DriveInfo.GetDrives())
+            try
             {
-                if (drive.IsReady && drive.DriveType == System.IO.DriveType.Fixed)
+                StoragePanel.Children.Clear();
+
+                foreach (var drive in DriveInfo.GetDrives())
                 {
-                    long totalSpace = drive.TotalSize;
-                    long freeSpace = drive.AvailableFreeSpace;
-                    long usedSpace = totalSpace - freeSpace;
-
-                    double usedPercentage = ((double)usedSpace / totalSpace) * 100;
-                    double totalGb = Math.Round((double)totalSpace / (1024 * 1024 * 1024), 1);
-                    double freeGb = Math.Round((double)freeSpace / (1024 * 1024 * 1024), 1);
-
-                    StackPanel driveRow = new StackPanel { Spacing = 5, Margin = new Thickness(0, 0, 0, 5) };
-
-                    TextBlock label = new TextBlock
+                    if (drive.IsReady && drive.DriveType == DriveType.Fixed)
                     {
-                        Text = $"{drive.Name} ({drive.VolumeLabel}) - {freeGb} GB free of {totalGb} GB",
-                        Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb(240, 255, 255, 100)),
-                        FontSize = 13
-                    };
+                        long totalSpace = drive.TotalSize;
+                        long freeSpace = drive.AvailableFreeSpace;
+                        long usedSpace = totalSpace - freeSpace;
 
-                    ProgressBar progressBar = new ProgressBar
-                    {
-                        Value = usedPercentage,
-                        Maximum = 100,
-                        Height = 6,
-                        CornerRadius = new CornerRadius(3),
-                        Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb(255, 163, 230, 53)), 
-                        Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb(255, 34, 34, 44)) 
-                    };
+                        double usedPercentage = totalSpace > 0 ? ((double)usedSpace / totalSpace) * 100 : 0;
+                        double totalGb = Math.Round((double)totalSpace / (1024 * 1024 * 1024), 1);
+                        double freeGb = Math.Round((double)freeSpace / (1024 * 1024 * 1024), 1);
 
-                    driveRow.Children.Add(label);
-                    driveRow.Children.Add(progressBar);
-                    StoragePanel.Children.Add(driveRow);
+                        var driveRow = new StackPanel { Spacing = 5, Margin = new Thickness(0, 0, 0, 5) };
+
+                        var label = new TextBlock
+                        {
+                            Text = $"{drive.Name} ({drive.VolumeLabel}) - {freeGb} GB free of {totalGb} GB",
+                            Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb(240, 255, 255, 100)),
+                            FontSize = 13
+                        };
+
+                        var progressBar = new ProgressBar
+                        {
+                            Value = usedPercentage,
+                            Maximum = 100,
+                            Height = 6,
+                            CornerRadius = new CornerRadius(3),
+                            Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb(255, 163, 230, 53)),
+                            Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb(255, 34, 34, 44))
+                        };
+
+                        driveRow.Children.Add(label);
+                        driveRow.Children.Add(progressBar);
+                        StoragePanel.Children.Add(driveRow);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                LoggerService.LogError("Error loading storage drives", ex);
             }
         }
     }

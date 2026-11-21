@@ -4,6 +4,18 @@ Here you can track all the updates and new features added to **K-WinMod** in pla
 
 ---
 
+## [0.1.3-beta] - 2026-11-21
+
+### 🔧 Fixes & Performance Improvements
+* **Fixed Registry Scope (HKLM vs HKCU):** Resolved a critical bug where Windows Telemetry and Start Menu Bing Search policies were written exclusively to `CurrentUser`, which caused Group Policy settings to be ignored by Windows background services. They are now properly written to `HKEY_LOCAL_MACHINE` and `HKEY_CURRENT_USER`.
+* **Resolved Dashboard Memory Leaks:** Stopped background performance counters (`cpuCounter`, `diskCounter`, `networkCounter`) and `DispatcherTimer` from leaking and consuming background CPU cycles when navigating away from the Dashboard. Resources are now cleanly initialized and disposed during navigation and page unloads.
+* **Asynchronous Execution Optimization:** Removed blocking `Task.Delay(1000).Wait()` calls in `HardwareEngine` and replaced them with non-blocking `await Task.Delay(1000)`.
+* **Cleaned Project Dependencies:** Eliminated duplicate NuGet `PackageReference` entries and outdated XAML generator tags in `MyTool.csproj` to ensure deterministic builds.
+* **Testability & Architecture:** Extracted `IRegistryEngine` and enabled constructor dependency injection across `OptimizationService` and `SystemEngine` for isolated unit testing.
+* **UI Version Synchronization:** Corrected the application footer and documentation to reflect `v0.1.3-beta`.
+
+---
+
 ## [0.1.2-beta] - 2026-08-04
 
 ### 🌟 New Features

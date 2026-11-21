@@ -7,8 +7,12 @@ namespace MyTool.Engines
 {
     public class SystemEngine
     {
+        private readonly IRegistryEngine _registryEngine;
 
-        private readonly RegistryEngine _registryEngine = new RegistryEngine();
+        public SystemEngine(IRegistryEngine? registryEngine = null)
+        {
+            _registryEngine = registryEngine ?? new RegistryEngine();
+        }
 
 
         /// <summary>
@@ -248,7 +252,11 @@ namespace MyTool.Engines
         {
             try
             {
-                return _registryEngine.GetDWordValue(keyPath, valueName, 0) == 1;
+                int hkcu = _registryEngine.GetDWordValue(keyPath, valueName, -1, Microsoft.Win32.RegistryHive.CurrentUser);
+                if (hkcu != -1) return hkcu == 1;
+
+                int hklm = _registryEngine.GetDWordValue(keyPath, valueName, 0, Microsoft.Win32.RegistryHive.LocalMachine);
+                return hklm == 1;
             }
             catch (Exception ex)
             {
@@ -268,7 +276,9 @@ namespace MyTool.Engines
                 {
                     LoggerService.LogInfo($"Setting Start Menu Bing Search disable policy to: {disable}...");
                     int val = disable ? 1 : 0;
-                    bool success = _registryEngine.SetDWordValue(keyPath, valueName, val);
+                    bool s1 = _registryEngine.SetDWordValue(keyPath, valueName, val, Microsoft.Win32.RegistryHive.CurrentUser);
+                    bool s2 = _registryEngine.SetDWordValue(keyPath, valueName, val, Microsoft.Win32.RegistryHive.LocalMachine);
+                    bool success = s1 || s2;
 
                     if (success)
                         LoggerService.LogInfo($"Start Menu Bing Search policy updated successfully to {disable}.");

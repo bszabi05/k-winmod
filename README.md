@@ -1,6 +1,6 @@
 ﻿# K-WinMod
 
-[![Version](https://img.shields.io/badge/version-0.1.2--beta-green.svg) ](https://github.com/kotrabdev/k-winmod)[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/version-0.1.3--beta-green.svg) ](https://github.com/kotrabdev/k-winmod)[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-blue.svg)]()
 
 **K-WinMod** is an ultra-fast, minimalist, and modern system utility designed to clean, speed up, and fine-tune your Windows 10 or 11 operating system. It provides a centralized, lightweight dashboard where users can instantly reclaim system resources, eliminate unwanted operating system clutter, and boost overall responsiveness with a single click—all wrapped in a sleek, dark-themed user interface with sharp neon green accents.

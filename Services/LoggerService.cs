@@ -28,8 +28,8 @@ namespace MyTool.Services
             WriteLog("INFO", message);
         }
 
-     // log type: error
-        public static void LogError(string message, Exception ex = null)
+        // log type: error
+        public static void LogError(string message, Exception? ex = null)
         {
             string fullMessage = ex != null ? $"{message} | Exception: {ex.Message} \nStackTrace: {ex.StackTrace}" : message;
             WriteLog("ERROR", fullMessage);

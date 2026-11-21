@@ -59,7 +59,7 @@
                     </Button>
                 </StackPanel>
 
-                <TextBlock x:Name="FooterText" Grid.Row="3" Text="v0.1.0-beta" Foreground="#3F3F46" FontSize="11" HorizontalAlignment="Center" FontFamily="Consolas"/>
+                <TextBlock x:Name="FooterText" Grid.Row="3" Text="v0.1.3-beta" Foreground="#3F3F46" FontSize="11" HorizontalAlignment="Center" FontFamily="Consolas"/>
             </Grid>
         </Border>
 
