@@ -4,6 +4,21 @@ Here you can track all the updates and new features added to **K-WinMod** in pla
 
 ---
 
+## [0.2.0-beta] - 2026-11-25
+
+### 🌟 New Features
+* **🚀 Startup Apps Manager:** Added a brand-new `Startup Apps` page to view, enable, disable, or permanently remove programs that run automatically when Windows boots. Uses Windows' native `StartupApproved` binary registry keys (`Run`, `Run32`, `StartupFolder`) so changes stay completely in sync with Task Manager.
+* **⚡ 1-Click Smart Boost (Dashboard):** Added a prominent Smart Boost hero banner to the Dashboard that concurrently trims idle process RAM, purges temporary junk files, and flushes DNS cache in one click, immediately refreshing live resource gauges.
+* **🛡️ System Restore Checkpoints:** Added a System Protection & Backup card to the Troubleshoot page. Creates Windows System Restore Points on demand (automatically enabling System Protection if disabled and bypassing the 24-hour rate limit) and includes a quick-launch button for the native Windows System Restore wizard (`rstrui.exe`).
+* **⚙️ Settings & GitHub Update Checker:** Added a `Settings & Info` page with an automatic background and manual GitHub Release checker (displaying a notification badge when a new version is available), one-click `Logs/` folder opening, and log cleanup controls.
+
+### 🔧 Fixes & Improvements
+* **Safe Temp Cleanup:** Updated `DiskEngine` to preserve `MSBuildTemp` inside `%TEMP%`, preventing cleanup runs from interfering with active Visual Studio / MSBuild sessions.
+* **Restore Point Date Parsing:** Fixed WMI `CIM_DATETIME` parsing so the latest System Restore checkpoint date and description display reliably.
+* **Centralized Versioning:** Added `AppInfo` to keep the UI footer, Settings badge, and Update Checker version synchronized.
+
+---
+
 ## [0.1.3-beta] - 2026-11-21
 
 ### 🔧 Fixes & Performance Improvements

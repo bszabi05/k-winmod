@@ -67,6 +67,19 @@ namespace MyTool.Services
             return await _systemEngine.ClearTempFilesAsync();
         }
 
+        public async Task<(bool Success, string Message)> CreateRestorePointAsync(string description = "K-WinMod Restore Point")
+        {
+            return await _systemEngine.CreateRestorePointAsync(description);
+        }
 
+        public bool OpenSystemRestoreWizard()
+        {
+            return _systemEngine.OpenSystemRestoreWizard();
+        }
+
+        public async Task<string?> GetLatestRestorePointInfoAsync()
+        {
+            return await _systemEngine.GetLatestRestorePointInfoAsync();
+        }
     }
 }

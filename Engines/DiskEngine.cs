@@ -66,9 +66,12 @@ namespace MyTool.Engines
                 }
             }
 
-            // Delete subfolders revursively
+            // Delete subfolders recursively
             foreach (DirectoryInfo dir in di.EnumerateDirectories())
             {
+                if (dir.Name.Equals("MSBuildTemp", StringComparison.OrdinalIgnoreCase))  //skip just for dev purposes
+                    continue;
+
                 try
                 {
                     dir.Delete(true);

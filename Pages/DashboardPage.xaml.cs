@@ -7,11 +7,13 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace MyTool
 {
     public partial class DashboardPage : Page
     {
+        private readonly OptimizationService _optimizationService = new OptimizationService();
         private DispatcherTimer? _timer;
         private PerformanceCounter? _diskCounter;
         private PerformanceCounter? _networkCounter;
@@ -64,6 +66,45 @@ namespace MyTool
         private void DashboardPage_Unloaded(object sender, RoutedEventArgs e)
         {
             StopMonitoring();
+        }
+
+        private async void SmartBoost_Click(object sender, RoutedEventArgs e)
+        {
+            SmartBoostButton.IsEnabled = false;
+            SmartBoostProgress.IsActive = true;
+            SmartBoostButton.Content = "Boosting...";
+
+            MainWindow.Instance.ShowNotification("Running 1-Click Smart Boost... Trimming RAM & cleaning temporary junk.");
+
+            try
+            {
+                var (processes, bytesFreed, dnsFlushed) = await _optimizationService.RunSmartBoostAsync();
+
+                double mbFreed = Math.Round((double)bytesFreed / (1024 * 1024), 1);
+                string summaryMsg = $"Smart Boost completed! Trimmed memory on {processes} processes, reclaimed {mbFreed} MB temporary storage.";
+
+                MainWindow.Instance.ShowNotification(summaryMsg);
+
+                // Instantly refresh live hardware metrics on Dashboard
+                UpdateMetrics();
+                LoadStorageDrives();
+
+                SmartBoostStatusText.Text = $"Last boosted: Just now • Trimmed {processes} processes • Freed {mbFreed} MB";
+
+                SmartBoostButton.Content = "Boosted!";
+                await Task.Delay(2000);
+            }
+            catch (Exception ex)
+            {
+                LoggerService.LogError("Error during 1-Click Smart Boost execution", ex);
+                MainWindow.Instance.ShowNotification("Smart Boost completed with partial warnings.");
+            }
+            finally
+            {
+                SmartBoostProgress.IsActive = false;
+                SmartBoostButton.IsEnabled = true;
+                SmartBoostButton.Content = "Boost Now";
+            }
         }
 
         private void StartMonitoring()

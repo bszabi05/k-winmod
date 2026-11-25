@@ -135,5 +135,31 @@ namespace MyTool.Services
         {
             return await _systemEngine.SetUltimatePerformanceStateAsync(enable);
         }
+
+        /// <summary>
+        /// Executes a comprehensive one-click optimization:
+        /// 1. Trims working sets of active processes to free RAM.
+        /// 2. Cleans temporary and junk files from user and system temp folders.
+        /// 3. Flushes the DNS resolver cache.
+        /// </summary>
+        public async Task<(int ProcessesOptimized, long BytesFreed, bool DnsFlushed)> RunSmartBoostAsync()
+        {
+            LoggerService.LogInfo(" Starting 1-Click Smart Boost sequence ");
+
+            var memTask = OptimizeMemoryAsync();
+            var diskTask = CleanTemporaryFilesAsync();
+            var dnsTask = FlushDNSCacheAsync();
+
+            await Task.WhenAll(memTask, diskTask, dnsTask);
+
+            int processes = await memTask;
+            long bytes = await diskTask;
+            bool dns = await dnsTask;
+
+            double mb = Math.Round((double)bytes / (1024 * 1024), 2);
+            LoggerService.LogInfo($" Smart Boost completed: Trimmed {processes} processes, Freed {mb} MB, DNS Flushed = {dns} ");
+
+            return (processes, bytes, dns);
+        }
     }
 }

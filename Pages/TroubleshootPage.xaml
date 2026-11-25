@@ -15,6 +15,39 @@
                 <TextBlock Text="Quickly restart drivers, reset core services, and resolve system bottlenecks to restore full functionality." FontSize="13" Foreground="#71717A"/>
             </StackPanel>
 
+            <!-- System Safety & Recovery Section -->
+            <StackPanel Spacing="15" HorizontalAlignment="Left" MaxWidth="1000" Width="Auto">
+                <TextBlock Text="System Protection &amp; Backup" FontSize="16" FontWeight="SemiBold" Foreground="#A1A1AA"/>
+
+                <Border HorizontalAlignment="Stretch" Background="#141419" BorderBrush="#22222C" BorderThickness="1" CornerRadius="12" Padding="20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Spacing="6" Margin="0,0,40,0">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <FontIcon Glyph="&#xEA18;" Foreground="#A3E635" FontSize="18" FontFamily="Segoe MDL2 Assets"/>
+                                <TextBlock Text="System Restore Point" Foreground="#F4F4F5" FontSize="15" FontWeight="SemiBold"/>
+                            </StackPanel>
+                            <TextBlock Text="Creates an instant Windows recovery checkpoint. Use this before applying system modifications to easily roll back if needed." 
+                                       FontSize="12" Foreground="#71717A" TextWrapping="Wrap"/>
+                            <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,4,0,0">
+                                <TextBlock Text="Last Checkpoint:" FontSize="11" Foreground="#52525B"/>
+                                <TextBlock x:Name="LastRestorePointText" Text="Loading..." FontSize="11" Foreground="#A1A1AA" FontWeight="Medium"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                            <Button x:Name="OpenRestoreWizardButton" Click="OpenRestoreWizard_Click" Content="Open Wizard" Background="#1A1A22" Foreground="#A1A1AA" BorderBrush="#2D2D3D" CornerRadius="6"/>
+                            <ProgressRing x:Name="RestorePointProgress" IsActive="False" Width="20" Height="20" Foreground="#A3E635"/>
+                            <Button x:Name="CreateRestorePointButton" Click="CreateRestorePoint_Click" Content="Create Checkpoint" Width="145" Background="#1A1A22" Foreground="#F4F4F5" BorderBrush="#2D2D3D" CornerRadius="6"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </StackPanel>
+
             <StackPanel Spacing="15" HorizontalAlignment="Left" MaxWidth="1000" Width="Auto">
 
                 <TextBlock Text="Available One-Click Fixes" FontSize="16" FontWeight="SemiBold" Foreground="#A1A1AA"/>

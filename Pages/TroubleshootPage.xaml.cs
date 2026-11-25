@@ -31,6 +31,67 @@ public partial class TroubleshootPage : Page
         base.OnNavigatedTo(e);
 
         await UpdateTouchpadWarningStatusAsync();
+        _ = UpdateLatestRestorePointStatusAsync();
+    }
+
+    private async Task UpdateLatestRestorePointStatusAsync()
+    {
+        try
+        {
+            string? latest = await _troubleshootService.GetLatestRestorePointInfoAsync();
+            LastRestorePointText.Text = !string.IsNullOrWhiteSpace(latest) ? latest : "None found or Protection off";
+        }
+        catch (Exception)
+        {
+            LastRestorePointText.Text = "Unavailable";
+        }
+    }
+
+    private async void CreateRestorePoint_Click(object sender, RoutedEventArgs e)
+    {
+        CreateRestorePointButton.IsEnabled = false;
+        OpenRestoreWizardButton.IsEnabled = false;
+        RestorePointProgress.IsActive = true;
+        CreateRestorePointButton.Content = "Creating...";
+
+        MainWindow.Instance.ShowNotification("Creating System Restore Point... Please wait.");
+
+        string checkpointName = $"K-WinMod Checkpoint - {DateTime.Now:yyyy-MM-dd HH:mm}";
+        var (success, message) = await _troubleshootService.CreateRestorePointAsync(checkpointName);
+
+        if (success)
+        {
+            CreateRestorePointButton.Content = "Created!";
+            MainWindow.Instance.ShowNotification("System Restore Point created successfully!");
+            await Task.Delay(1200);
+            await UpdateLatestRestorePointStatusAsync();
+            if (LastRestorePointText.Text.StartsWith("None") || LastRestorePointText.Text.StartsWith("Unavailable"))
+            {
+                LastRestorePointText.Text = $"{DateTime.Now:yyyy-MM-dd HH:mm} ({checkpointName})";
+            }
+        }
+        else
+        {
+            CreateRestorePointButton.Content = "Failed";
+            MainWindow.Instance.ShowNotification($"Restore point creation failed: {message}");
+        }
+
+        await Task.Delay(2500);
+
+        RestorePointProgress.IsActive = false;
+        CreateRestorePointButton.IsEnabled = true;
+        OpenRestoreWizardButton.IsEnabled = true;
+        CreateRestorePointButton.Content = "Create Checkpoint";
+    }
+
+    private void OpenRestoreWizard_Click(object sender, RoutedEventArgs e)
+    {
+        MainWindow.Instance.ShowNotification("Launching Windows System Restore (rstrui.exe)...");
+        bool opened = _troubleshootService.OpenSystemRestoreWizard();
+        if (!opened)
+        {
+            MainWindow.Instance.ShowNotification("Failed to launch System Restore Wizard. Ensure proper permissions.");
+        }
     }
 
    // check I2C HID status

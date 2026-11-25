@@ -51,15 +51,28 @@
                             <TextBlock Text="Optimization" Foreground="#F4F4F5" FontSize="14" FontWeight="Medium"/>
                         </StackPanel>
                     </Button>
+                    <Button Click="MenuButton_Click" Tag="StartupPage" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="12" Background="Transparent" BorderThickness="0" CornerRadius="8">
+                        <StackPanel Orientation="Horizontal" Spacing="15">
+                            <FontIcon Glyph="&#xE71D;" Foreground="#A1A1AA" FontSize="16" FontFamily="Segoe MDL2 Assets" Width="16"/>
+                            <TextBlock Text="Startup Apps" Foreground="#F4F4F5" FontSize="14" FontWeight="Medium"/>
+                        </StackPanel>
+                    </Button>
                     <Button Click="MenuButton_Click" Tag="TroubleshootPage" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="12" Background="Transparent" BorderThickness="0" CornerRadius="8">
                         <StackPanel Orientation="Horizontal" Spacing="15">
                             <FontIcon Glyph="&#xE90F;" Foreground="#A1A1AA" FontSize="16" FontFamily="Segoe MDL2 Assets" Width="16"/>
                             <TextBlock Text="Troubleshoot" Foreground="#F4F4F5" FontSize="14" FontWeight="Medium"/>
                         </StackPanel>
                     </Button>
+                    <Button Click="MenuButton_Click" Tag="SettingsPage" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="12" Background="Transparent" BorderThickness="0" CornerRadius="8">
+                        <StackPanel Orientation="Horizontal" Spacing="15">
+                            <FontIcon Glyph="&#xE115;" Foreground="#A1A1AA" FontSize="16" FontFamily="Segoe MDL2 Assets" Width="16"/>
+                            <TextBlock Text="Settings &amp; Info" Foreground="#F4F4F5" FontSize="14" FontWeight="Medium"/>
+                            <Ellipse x:Name="UpdateBadge" Width="8" Height="8" Fill="#A3E635" Visibility="Collapsed" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
 
-                <TextBlock x:Name="FooterText" Grid.Row="3" Text="v0.1.3-beta" Foreground="#3F3F46" FontSize="11" HorizontalAlignment="Center" FontFamily="Consolas"/>
+                <TextBlock x:Name="FooterText" Grid.Row="3" Text="v0.2.0-beta" Foreground="#3F3F46" FontSize="11" HorizontalAlignment="Center" FontFamily="Consolas"/>
             </Grid>
         </Border>
 

@@ -35,6 +35,40 @@ namespace MyTool.Services
             WriteLog("ERROR", fullMessage);
         }
 
+        public static string GetLogDirectory()
+        {
+            if (!Directory.Exists(LogDirectory))
+            {
+                Directory.CreateDirectory(LogDirectory);
+            }
+            return LogDirectory;
+        }
+
+        public static int ClearLogs()
+        {
+            int deleted = 0;
+            lock (LockObject)
+            {
+                try
+                {
+                    if (Directory.Exists(LogDirectory))
+                    {
+                        foreach (var file in Directory.GetFiles(LogDirectory, "*.log"))
+                        {
+                            try
+                            {
+                                File.Delete(file);
+                                deleted++;
+                            }
+                            catch { }
+                        }
+                    }
+                }
+                catch { }
+            }
+            return deleted;
+        }
+
        // writing log to file
         private static void WriteLog(string level, string message)
         {

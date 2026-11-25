@@ -58,8 +58,28 @@ namespace MyTool
                 }
    
             }
-            LoggerService.LogInfo($"App started");
+            FooterText.Text = AppInfo.DisplayVersion;
+            LoggerService.LogInfo($"App started ({AppInfo.DisplayVersion})");
+            _ = CheckForUpdatesOnStartupAsync();
+        }
 
+        private async Task CheckForUpdatesOnStartupAsync()
+        {
+            try
+            {
+                await Task.Delay(2500);
+                var updateService = new UpdateService();
+                var result = await updateService.CheckForUpdatesAsync();
+                if (result.IsSuccess && result.IsUpdateAvailable)
+                {
+                    DispatcherQueue.TryEnqueue(() =>
+                    {
+                        UpdateBadge.Visibility = Visibility.Visible;
+                        ShowNotification($"New version available: {result.LatestVersion}! Go to Settings & Info to download.");
+                    });
+                }
+            }
+            catch { }
         }
 
         private void MenuButton_Click(object sender, RoutedEventArgs e)

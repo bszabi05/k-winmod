@@ -379,5 +379,168 @@ namespace MyTool.Engines
                 return false;
             });
         }
+
+        /// <summary>
+        /// Creates a Windows System Restore Point with the given description.
+        /// </summary>
+        public async Task<(bool Success, string Message)> CreateRestorePointAsync(string description = "K-WinMod Restore Point")
+        {
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    LoggerService.LogInfo($"Initiating System Restore Point creation ('{description}')...");
+
+                    //  Set SystemRestorePointCreationFrequency = 0 in HKLM to bypass the 24h rate limit
+                    try
+                    {
+                        _registryEngine.SetDWordValue(
+                            @"Software\Microsoft\Windows NT\CurrentVersion\SystemRestore",
+                            "SystemRestorePointCreationFrequency",
+                            0,
+                            Microsoft.Win32.RegistryHive.LocalMachine);
+                    }
+                    catch (Exception regEx)
+                    {
+                        LoggerService.LogError("Failed to set SystemRestorePointCreationFrequency in registry", regEx);
+                    }
+
+                    // Ensure VSS is running, System Protection is enabled on SystemDrive, and create Checkpoint
+                    string psCommand =
+                        "Start-Service -Name VSS -ErrorAction SilentlyContinue; " +
+                        "$drive = $env:SystemDrive; " +
+                        "if ($drive) { Enable-ComputerRestore -Drive $drive -ErrorAction SilentlyContinue; } " +
+                        $"Checkpoint-Computer -Description '{description}' -RestorePointType 'MODIFY_SETTINGS'";
+
+                    ProcessStartInfo psInfo = new ProcessStartInfo
+                    {
+                        FileName = "powershell.exe",
+                        Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{psCommand}\"",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    };
+
+                    using (Process? psProcess = Process.Start(psInfo))
+                    {
+                        if (psProcess != null)
+                        {
+                            string stdOut = psProcess.StandardOutput.ReadToEnd();
+                            string stdErr = psProcess.StandardError.ReadToEnd();
+                            psProcess.WaitForExit();
+
+                            if (psProcess.ExitCode == 0)
+                            {
+                                LoggerService.LogInfo("System Restore Point created successfully.");
+                                return (true, "System Restore Point created successfully!");
+                            }
+                            else
+                            {
+                                string errorMsg = !string.IsNullOrWhiteSpace(stdErr) ? stdErr : stdOut;
+                                LoggerService.LogError($"Failed to create restore point. ExitCode: {psProcess.ExitCode}, Error: {errorMsg}");
+                                return (false, $"Failed to create restore point: {errorMsg.Trim()}");
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LoggerService.LogError("Critical error while creating System Restore Point", ex);
+                    return (false, ex.Message);
+                }
+
+                return (false, "Could not start PowerShell process.");
+            });
+        }
+
+        /// <summary>
+        /// Opens the native Windows System Restore recovery wizard (rstrui.exe).
+        /// </summary>
+        public bool OpenSystemRestoreWizard()
+        {
+            try
+            {
+                LoggerService.LogInfo("Opening Windows System Restore Wizard (rstrui.exe)...");
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = "rstrui.exe",
+                    UseShellExecute = true
+                });
+                return true;
+            }
+            catch (Exception ex)
+            {
+                LoggerService.LogError("Failed to launch rstrui.exe", ex);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets the latest System Restore Point's creation time and description.
+        /// </summary>
+        public async Task<string?> GetLatestRestorePointInfoAsync()
+        {
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    string psCommand =
+                        "$rp = Get-ComputerRestorePoint -ErrorAction SilentlyContinue | Sort-Object SequenceNumber -Descending | Select-Object -First 1; " +
+                        "if (-not $rp) { $rp = Get-CimInstance -Namespace root/default -ClassName SystemRestore -ErrorAction SilentlyContinue | Sort-Object SequenceNumber -Descending | Select-Object -First 1; } " +
+                        "if ($rp) { Write-Output ($rp.CreationTime + '|' + $rp.Description); } else { Write-Output 'None'; }";
+
+                    ProcessStartInfo psInfo = new ProcessStartInfo
+                    {
+                        FileName = "powershell.exe",
+                        Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{psCommand}\"",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    };
+
+                    using (Process? psProcess = Process.Start(psInfo))
+                    {
+                        if (psProcess != null)
+                        {
+                            string output = psProcess.StandardOutput.ReadToEnd().Trim();
+                            string error = psProcess.StandardError.ReadToEnd().Trim();
+                            psProcess.WaitForExit();
+
+                            if (psProcess.ExitCode == 0 && !string.IsNullOrWhiteSpace(output) && output != "None")
+                            {
+                                string[] parts = output.Split(new[] { '|' }, 2);
+                                string rawTime = parts[0].Trim();
+                                string description = parts.Length > 1 ? parts[1].Trim() : "";
+
+                                string formattedDate = rawTime;
+                                if (rawTime.Length >= 14 && DateTime.TryParseExact(rawTime.Substring(0, 14), "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
+                                {
+                                    formattedDate = parsedDate.ToString("yyyy-MM-dd HH:mm");
+                                }
+                                else if (rawTime.Length >= 12)
+                                {
+                                    formattedDate = $"{rawTime.Substring(0, 4)}-{rawTime.Substring(4, 2)}-{rawTime.Substring(6, 2)} {rawTime.Substring(8, 2)}:{rawTime.Substring(10, 2)}";
+                                }
+
+                                return !string.IsNullOrWhiteSpace(description) ? $"{formattedDate} ({description})" : formattedDate;
+                            }
+
+                            if (!string.IsNullOrWhiteSpace(error))
+                            {
+                                LoggerService.LogError($"GetLatestRestorePointInfo PowerShell Error: {error}");
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LoggerService.LogError("Failed to query latest System Restore Point info", ex);
+                }
+
+                return null;
+            });
+        }
     }
 }
